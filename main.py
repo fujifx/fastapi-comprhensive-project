@@ -77,3 +77,15 @@ async def delete_post(id: int):
     # So instead, return as below
     return Response(status_code=status.HTTP_204_NO_CONTENT)
  
+
+@app.put("/posts/{id}")
+async def update_post(id: int, post: Post):
+    post_index = find_index_post(id)
+
+    if post_index == None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} was not found")
+    
+    post_dict = post.model_dump()
+    post_dict['id'] = id
+    my_posts[post_index] = post_dict
+    return {"message": post_dict}    
